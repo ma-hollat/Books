@@ -1,136 +1,136 @@
-const form = document.querySelector("#task-form");
-const taskList = document.querySelector(".collection");
-const taskInput = document.querySelector("#task");
+const form = document.querySelector("#book-form");
+const bookList = document.querySelector(".collection");
+const bookInput = document.querySelector("#book");
 const filterInput = document.querySelector("#filter");
-const clearBtn = document.querySelector(".clear-tasks");
+const clearBtn = document.querySelector(".clear-books");
 
 loadEventListeners();
 
 function loadEventListeners(){
-    //Loaad tasks for local storage, if there are any
-    document.addEventListener('DOMContentLoaded', getTasks);
-    //Add a task event
-    form.addEventListener('submit', addTask);
-    //Remove task
-    taskList.addEventListener('click', removeTask);
-    //Clear all tasks
-    clearBtn.addEventListener('click', clearTasks);
-    //filter tasks
-    filterInput.addEventListener('keyup', filterTasks);
+    document.addEventListener('DOMContentLoaded', getBooks);
+    //Add a book event
+    form.addEventListener('submit', addBook);
+    //Remove Book
+    bookList.addEventListener('click', removeBook);
+    //Clear all books
+    clearBtn.addEventListener('click', clearBooks);
+    //filter books
+    filterInput.addEventListener('keyup', filterBooks);
 }
 
-//get tasks from local storage
-function getTasks(){
-    let tasks;
-    if(localStorage.getItem('tasks') === null){
-        tasks = [];
-    }else {
-        tasks = JSON.parse(localStorage.getItem('tasks'));
+//get tasts from local storage
+function getBooks(){
+    let books;
+    if(localStorage.getItem('books')==null){
+        books = [];
+    } else {
+        books = JSON.parse(localStorage.getItem('books'));
     }
-    tasks.forEach(function(task){
-        //create an li element
+
+    books.forEach(function(book){
+        //create li element
         const li = document.createElement('li');
         //add class name to the li element
         li.className = 'collection-item';
-        //create a textnode and append it to the it
-        li.appendChild(document.createTextNode(task));
+        //create a textmode and append it to the li
+        li.appendChild(document.createTextNode(book));
 
-        const link = document.createElement('li');
+        const link = document.createElement('a');
         //add a class to the a element
         link.className = 'delete-item secondary-content';
         link.innerHTML = 'X';
         li.appendChild(link);
-        taskList.appendChild(li);
+        bookList.appendChild(li);
     });
 }
 
-function addTask(event){
+function addBook(event){
     //check for empty input
-    if(taskInput.value === ''){
-        alert('Enter a Task');
+    if(bookInput.value === ''){
+        alert('Enter a Book');
     }
 
     //Create an li element to add to the ul
     const li = document.createElement('li');
     //Add a clear name to the li element
     li.className = 'collection-item';
-    li.appendChild(document.createTextNode(taskInput.value));
+    li.appendChild(document.createTextNode(bookInput.value));
     //create a new anchor element
     const link = document.createElement('a');
     //add a class to the a element
     link.className = 'delete-item secondary-content';
     link.innerHTML = 'X';
     li.appendChild(link);
-    taskList.appendChild(li);
+    bookList.appendChild(li);
 
-    
     //store in LocalStorage
-    storeInLocalStorage(taskInput.value);
-    taskInput.value = '';
+    storeInLocalStorage(bookInput.value);
+    bookInput.value = '';
+
     event.preventDefault();
 }
 
-function storeInLocalStorage(task){
+function storeInLocalStorage(book){
     //declare an array to read from the local storage
-    let tasks;
-    if(localStorage.getItem("tasks") === null){
-        tasks =[];
+    let books;
+    if(localStorage.getItem("books") === null){
+        books =[];
     } else{
-        tasks = JSON.parse(localStorage.getItem('tasks'));
+        books = JSON.parse(localStorage.getItem('books'));
     }
 
-    //add a tasks to the tasks array
-    tasks.push(task);
-    localStorage.setItem('tasks', JSON.stringify(tasks))
+    //add a books to the books array
+    books.push(book);
+    localStorage.setItem('books', JSON.stringify(books))
 }
 
-function removeTask(event){
+function removeBook(event){
     if(event.target.classList.contains('delete-item')){
         if(confirm('Are you sure about that')){
             event.target.parentElement.remove();
 
             //Remove from local storage
-            removeTaskFromLocalStorage(event.target.parentElement);
+            removeBookFromLocalStorage(event.target.parentElement);
         }
     }
 }
 
-function removeTaskFromLocalStorage(taskItem){
-    let tasks;
+function removeBookFromLocalStorage(bookItem){
+    let books;
 
-    if(localStorage.getItem('tasks') === null){
-        tasks = [];
-    }else {
-        tasks = JSON.parse(localStorage.getItem('tasks'));
+    if(localStorage.getItem('books') === null){
+        books = [];
+    } else {
+        books = JSON.parse(localStorage.getItem('books'));
     }
 
-    tasks.forEach(function(task, index){
-        if(taskItem.textContent.slice(0, -1) === task){
-            tasks.splice(index, 1);
+    books.forEach(function(book, index){
+        if(bookItem.textContent.slice(0, -1) === book){
+            books.splice(index, 1)
         }
     });
 
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem('books', JSON.stringify(books));
 }
 
-function clearTasks(){
+function clearBooks(){
     if(confirm('Are you sure about that')){
-        while(taskList.firstChild){
-            taskList.removeChild(taskList.firstChild);
+        while(bookList.firstChild){
+            bookList.removeChild(bookList.firstChild);
         } 
+        localStorage.clear();
     }
 }
 
-function filterTasks(event){
+function filterBooks(event){
     const userFilter = event.target.value.toLowerCase();
     
-    document.querySelectorAll('.collection-item').forEach(function(task){
-        const item = task.firstChild.textContent;
+    document.querySelectorAll('.collection-item').forEach(function(book){
+        const item = book.firstChild.textContent;
         if(item.toLowerCase().indexOf(userFilter) != -1){
-            task.style.display = 'block';
+            book.style.display = 'block';
         } else{
-            task.style.display = 'none';
+            book.style.display = 'none';
         }
     });
 }
-
